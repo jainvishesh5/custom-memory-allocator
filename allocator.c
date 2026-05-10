@@ -5,6 +5,7 @@ struct Block{
     size_t size;
     int is_free;
     struct Block *next;
+    int padding;
 };
 
 struct Block* head = NULL;
@@ -50,6 +51,8 @@ void* my_malloc(size_t size){
     struct Block* block;
     if(size<=0)return NULL;
 
+    size = (size+7) & ~7;
+
     if(!head){
         block = request_space(NULL, size);
         if(!block)return NULL;
@@ -82,7 +85,11 @@ void my_free(void* ptr){
 
     struct Block* block = (struct Block*)ptr -1;
     block-> is_free =1;
-}
 
+    while(block->next && block->next->is_free){
+        block->size += sizeof(struct Block) + block->next->size;
+        block->next = block->next->next;
+    }
+}
 
 
