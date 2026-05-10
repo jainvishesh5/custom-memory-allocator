@@ -34,6 +34,18 @@ struct Block* find_free_block(struct Block** last,  size_t size){
     return current;
 }
 
+void split_block(struct Block* block , size_t size){
+    struct Block* new_block = (struct Block*)((char*)block + sizeof(struct Block) + size);
+    
+    new_block -> size = block->size - size - sizeof(struct Block);
+    new_block-> is_free =1;
+    new_block->next = block->next;
+
+    block -> size =size;
+    block->next = new_block;
+    block->is_free =0;
+}
+
 void* my_malloc(size_t size){
     struct Block* block;
     if(size<=0)return NULL;
@@ -47,15 +59,23 @@ void* my_malloc(size_t size){
     else{
         struct Block* last = head;
         block = find_free_block(&last , size);
-        if(!block){
+
+        if(block){ 
+            if(block->size >= size + sizeof(struct Block) +16){
+
+              split_block(block , size);
+            }
+
+        block->is_free =0;
+    }
+       else{
             block = request_space(last , size);
             if(!block)return NULL;
-        } else{
-            block -> is_free = 0;
-        }
     }
+}
     return (void*)(block+1);
 }
+
 
 void my_free(void* ptr){
     if(!ptr)return;
@@ -63,5 +83,6 @@ void my_free(void* ptr){
     struct Block* block = (struct Block*)ptr -1;
     block-> is_free =1;
 }
+
 
 

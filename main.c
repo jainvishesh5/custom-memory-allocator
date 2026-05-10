@@ -29,6 +29,5 @@ int main(){
     } else{
         printf("Memory reuse failed, pointers are different: %p and %p\n", (void*)age, (void*)new_age);
     }
-
     return 0;
 }
