@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include <unistd.h>
+#include <string.h>
 
 struct Block{
     size_t size;
@@ -92,4 +93,10 @@ void my_free(void* ptr){
     }
 }
 
+void* my_calloc(size_t num , size_t size){
+    size_t total_size = num*size;
+    void* ptr = my_malloc(total_size);
 
+    if(ptr) memset(ptr , 0 , total_size);
+    return ptr;
+}

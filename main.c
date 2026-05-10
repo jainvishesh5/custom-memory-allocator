@@ -32,5 +32,14 @@ int main(){
     } else{
         printf("Memory reuse failed, pointers are different: %p and %p\n", (void*)age, (void*)new_age);
     }
+
+    int *arr = (int*)my_calloc(5, sizeof(int));
+    if(arr){
+        printf("allocated array of 5 integers at address %p\n", (void*)arr);
+        for(int i=0 ;i<5 ;i++){
+            printf("arr[%d] = %d\n", i , arr[i]);
+        }
+    }
     return 0;
 }
+
