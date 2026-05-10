@@ -57,4 +57,11 @@ void* my_malloc(size_t size){
     return (void*)(block+1);
 }
 
+void my_free(void* ptr){
+    if(!ptr)return;
+
+    struct Block* block = (struct Block*)ptr -1;
+    block-> is_free =1;
+}
+
 
